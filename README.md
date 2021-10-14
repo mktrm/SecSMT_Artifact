@@ -19,8 +19,6 @@ This artifact comprises two main relatively separable components: the framework 
 * Compile gem5 (15 minutes)
 * Run Spec Experiments (min of ~800 core hours)
 * Validate Results (5 minutes)
-* Run Javascript Experiments (64 core hours)
-* Validate Results (10 minutes)
 
 ### 0. Requirements
 * Access to SPEC 2017 CPU benchmarks and simpoints 
