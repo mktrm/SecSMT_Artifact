@@ -26,7 +26,7 @@ This artifact comprises two main relatively separable components: the framework 
 
 ### 0. Requirements
 * Intel(R) Core(TM) i7-6770HQ Processor
-* An AMD Ryzen Threadripper 3960X Processor
+* AMD Ryzen Threadripper 3960X Processor
 
 
 ### 1. Getting Started 
