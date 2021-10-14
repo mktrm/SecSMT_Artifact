@@ -1,12 +1,4 @@
-;---------------------------------------------------------------------------- Constants to be defined: nopsize:   Size of NOP instructions. (1 - 15) 
-; repeat1:   Number of loop repetitions
-;
-; repeat2:   Number of instructions in loop
-;
-; t2_repeat1 t2_repeat2: as above but for thread2
-;
-; (c) Copyright 2013 by Agner Fog. GNU General Public License www.gnu.org/licenses
-;-----------------------------------------------------------------------------
+
 %define nthreads    4
 %define t2_repeat1  40
 %define t2_repeat2  10
