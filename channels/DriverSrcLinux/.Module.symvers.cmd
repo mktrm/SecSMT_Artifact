@@ -1,0 +1,1 @@
+cmd_/home/mkt/secSMT_art/channels/DriverSrcLinux/Module.symvers := sed 's/ko$$/o/' /home/mkt/secSMT_art/channels/DriverSrcLinux/modules.order | scripts/mod/modpost -m -a   -o /home/mkt/secSMT_art/channels/DriverSrcLinux/Module.symvers -e -i Module.symvers   -T -
