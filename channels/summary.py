@@ -19,7 +19,8 @@ df = pd.read_csv("results.csv", skipinitialspace=True,
                 names=["channel", "bw", "error"])
 df = df[df.error <= 0.1]
 # %%
+print ("average:")
 print (df.groupby("channel").mean())
 # %%
-print (df.groupby("channel").std())
+
 # %%
