@@ -1,1 +1,0 @@
-cmd_/home/mkt/secSMT_art/channels/DriverSrcLinux/modules.order := {   echo /home/mkt/secSMT_art/channels/DriverSrcLinux/MSRdrv.ko; :; } | awk '!x[$$0]++' - > /home/mkt/secSMT_art/channels/DriverSrcLinux/modules.order
