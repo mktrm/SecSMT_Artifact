@@ -9,7 +9,7 @@ LDFLAGS = -lpthread
 COUNTERS = 2#310,315,316,317
 NASM_NAMES = covert  
 LOGLEVEL ?= INFO
-COMMON = ../common
+COMMON = ../common/
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 FREQ = $(shell printf "%.0f*1000\n" $$(cat /proc/cpuinfo | grep MHz | cut -d: -f 2 | sort -r | head -n 1 ) | bc)
 
