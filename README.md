@@ -77,13 +77,17 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 
 ### 2. Install gem5 dependency 
 * Install all the dependencies required for gem5 compilation by running `sudo ./scripts/install_requirements.sh`
+  - [ArtifactEvaluators] you can run `./scripts/load_requirements.sh` on our servers to load required Environment Modules
 
 ### 3. Build the simulator
 * Run `scripts/build_gem5.sh` to build the simulator.
 
 ### 4. Run Spec Experiments
+
 * Create the SPEC folder `workloads/spec2017` with all the available simpoints, alternatively, make sure the script `scripts/spec17/config.py` has a correct pointer to the spec17 root folder. 
-* If you already have access to SPEC joint checkpoints skip this step. Use `python scripts/merge_ckp.py` to create joint multithreaded SMT checkpoints from single-threaded Spec Simpoints. 
+  - [ArtifactEvaluators] You can run ` ln -s  /p/csd/mtaram/spec2017-2/ workloads/spec2017` on our servers to link the folder containing spec2017 simpoints into the correct path.
+*  If you already have access to SPEC joint checkpoints skip this step. Use `python scripts/merge_ckp.py` to create joint multithreaded SMT checkpoints from single-threaded Spec Simpoints. 
+    - [ArtifactEvaluators] You should skip this step.
 * Use `python3 scripts/spec17/run_gem5.py` to submit all of the simulation jobs to the Slurm scheduler. 
  - It should take around 2 to 3 hours if enough computing nodes are available.
 
