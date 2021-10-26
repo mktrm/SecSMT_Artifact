@@ -71,7 +71,7 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 ### 1. Getting Started 
 * Install git if it is not already installed: `sudo apt-get install git`
  - Use an appropriate package manager if not running Ubuntu/Debian.
-* Clone our git repository: `git clone https://github.com/mktrm/secSMT_Artifact && cd secSMT/mitigations`
+* Clone our git repository: `git clone https://github.com/mktrm/secSMT_Artifact && cd secSMT_Artifact/mitigations`
 * Checkout the right commit hash: `git checkout <commit-hash>`
 
 
