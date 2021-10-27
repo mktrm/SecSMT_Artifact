@@ -89,7 +89,7 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 *  If you already have access to SPEC joint checkpoints skip this step. Use `python scripts/merge_ckp.py` to create joint multithreaded SMT checkpoints from single-threaded Spec Simpoints. 
     - [ArtifactEvaluators] You should skip this step.
 * Use `python3 scripts/spec17/run_gem5.py` to submit all of the simulation jobs to the Slurm scheduler. 
- - It should take around 30 min to submit all of the jobs and they should take around 2 to 3 hours to complete if enough computing nodes are available. You can see the status of the jobs using `squeue`. 
+    - It should take around 30 min to submit all of the jobs and they should take around 2 to 3 hours to complete if enough computing nodes are available. You can see the status of the jobs using `squeue`. 
 
 
 ### 4. Validate Results
