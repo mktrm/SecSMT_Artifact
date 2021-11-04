@@ -1,8 +1,11 @@
 from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
-
 import pandas as pd
+import pathlib
+from glob import glob
+
+ROOT = str(pathlib.Path(__file__).parent.parent.parent.resolve())
 
 columns = ["system.cpu.cpi_total", "system.cpu.cpi::0", "system.cpu.cpi::1"]
 
@@ -34,10 +37,12 @@ def nametable(x):
     else:
         return x[:-3] # remove js suffix
 records = []
-from glob import glob
-for fn in glob("*/stat-file.txt"):
+
+print (ROOT+"/results/*/stat-file.txt")
+for fn in glob(ROOT+"/results/*.js/stat-file.txt"):
+
     # print(fn)
-    descriptor, suffix = fn.split("/")
+    descriptor, suffix = fn.split("/")[-2:]
     arch, cryptobench, jsbench = descriptor.split("__")
     arch = nametable(arch)
     cryptobench = nametable(cryptobench)
@@ -71,9 +76,7 @@ for fn in glob("*/stat-file.txt"):
         "jsbench": jsbench,
     }
     for k in columns:
-        # print(k, d[k])
         record[k] = float(d[k])
-#     print(record)
     records.append(record)
 
 df = pd.DataFrame.from_records(records)
@@ -85,10 +88,8 @@ for index, row in df.iterrows():
         continue
     dyn_row =  df[ (df["arch"] == "Shared") & (df["jsbench"] == row["jsbench"]) & (df["cryptobench"] == row["cryptobench"]) ] 
     print ("---start---")
-    print (row)
-    print (dyn_row)
-    df["system.cpu.cpi_total"][index] = (dyn_row["system.cpu.cpi::1"]/row["system.cpu.cpi::1"]+dyn_row["system.cpu.cpi::0"]/row["system.cpu.cpi::0"])/2
-    print ( dyn_row["system.cpu.cpi_total"]/row["system.cpu.cpi_total"]  )
+    df["system.cpu.cpi_total"][index] = (float(dyn_row["system.cpu.cpi::1"])/float(row["system.cpu.cpi::1"])+float(dyn_row["system.cpu.cpi::0"])/float(row["system.cpu.cpi::0"]))/2
+    print ( float(dyn_row["system.cpu.cpi_total"]) )
     print ("---end---")
 for index, row in df.iterrows():
     if row["arch"] == "Shared":
@@ -117,14 +118,12 @@ with pd.option_context('display.max_rows', None, 'display.max_columns', None):  
 
 #%%
 
-# fig, g1 = plt.subplots(figsize=(10, 10))
-#tidy = df.melt(id_vars='Factor').rename(columns=str.title)
-#sns.set(rc={'figure.figsize':(20,8.27)})
 set_style()
 g = sns.catplot(
     col='Trusted Thread',
     x='jsbench',
     hue_order = ["Shared", "Partitioned", "Adaptive", "Asymmetric"],
+    order = ["string-base64", "math-cordic", "3d-raytrace", "recursive", "regexp-dna"],
     hue='arch',
     y='Speedup over Shared',
     data=tidy, kind="bar",
@@ -132,22 +131,13 @@ g = sns.catplot(
 g.set_xticklabels(rotation=90)
 
 g.fig.tight_layout()
-#g.set(ylim=(-0.10, None))
-#g.annotate(str("%.2f"%bar.get_height()), (bar.get_x() + 0.02, bar.get_height() + 0.03), rotation=90)
 plt.legend(loc=("upper right"),
            bbox_to_anchor=(1.05, 1.40),
            ncol=4,
-           #handles=handles[1:],
-           #labels=labels[1:],
            prop={'size': 15},
             title="",
-           #handletextpad=0.1,
-           #labelspacing=10,
-           #borderpad=0.3,
-           #columnspacing=.5
 )
 
-#plt.yticks(np.arange(0, 1.6, .25))
 ges = g.axes.flatten()
 for gg in ges:
     gg.set_xlabel("")

@@ -62,6 +62,8 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 * Compile gem5 (15 minutes)
 * Run Spec Experiments (min of ~800 core hours)
 * Validate Results (5 minutes)
+* Run Javascript Benchmarks (~40 core hours)
+* Validate Results (5 minutes)
 
 ### 0. Requirements
 * Access to SPEC 2017 CPU benchmarks and simpoints 
@@ -89,13 +91,21 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 *  If you already have access to SPEC joint checkpoints skip this step. Use `python scripts/merge_ckp.py` to create joint multithreaded SMT checkpoints from single-threaded Spec Simpoints. 
     - [ArtifactEvaluators] You should skip this step.
 * Use `python3 scripts/spec17/run_gem5.py` to submit all of the simulation jobs to the Slurm scheduler. 
- - It should take around 2 to 3 hours if enough computing nodes are available.
+    - It should take around 30 min to submit all of the jobs and they should take around 2 to 3 hours to complete if enough computing nodes are available. You can see the status of the jobs using `squeue`. 
 
 
 ### 4. Validate Results
 * Run `python3 scripts/spec17/draw_figs.py` to parse the results and draw the performance figure.
 * Open the pdf file that is stored in the current directory (`fig-mitigation-all.pdf`) and compare the results with figure 7 of the paper.
 
+### 5. Run Javascript Experiments
+* Use `./scripts/browserlike/runall.sh slurm` to submit javascript experiemnts to the Slurm scheduler.
+  - Alternativly, you can run this locally using `./scripts/browserlike/runall.sh`
+  - This should take about an hour if enough parallelism is available.
+
+### 6. Validate Results
+* Run `python3 scripts/browserlike/graph.py` to parse the results and draw the performance figure.
+* Open the pdf file that is stored in the current directory (`browserlike.pdf`) and compare the results with figure 8 of the paper.
 
 
 
