@@ -16,7 +16,7 @@ from pathlib import Path
 
 
 df = pd.read_csv("results.csv", skipinitialspace=True, 
-                names=["channel", "bw", "error"])
+                names=["channel", "bw (kbps)", "error"])
 df = df[df.error <= 0.1]
 # %%
 print ("average:")
