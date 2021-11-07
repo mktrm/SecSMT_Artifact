@@ -1,6 +1,6 @@
 
 # %%
-import config
+
 from pathlib import Path
 from itertools import combinations
 from itertools import combinations_with_replacement
@@ -11,6 +11,8 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
+sys.path.append(str(Path(__file__).parent.parent.resolve()))
+from spec17 import config
 # %%
 def set_style():
     #plt.style.use(['seaborn-white', 'seaborn-paper'])
@@ -36,17 +38,17 @@ instructions = ["movb",
                 "cpuid",
                 "lfence",
                 "nop"]
-for i in range(1,14):
+for i in range(1,2):
   time = []
   schm = []
   indx = []
   index = 0 
   if i == 7:
     continue
-  for schemek,scheme in enumerate(["all_shared", "all_partitioned", "all_partitioned", "all_partitioned"]):
+  for schemek,scheme in enumerate(["all_shared", "all_partitioned", "all_adaptive", "all_asymmetric__"]):
     index = 0
     for j in range(1,14):
-      results_file_path = f"/u/mtaram/gem5-smt/sec_results/results_{i}_{j}_{scheme}.log"
+      results_file_path = f"{config.ROOT}/results/sec_results/results_{i}_{j}_{scheme}.log"
       first_measurement_skiped = 0
       with open (results_file_path, 'r') as f:
         for line in f:
@@ -95,9 +97,4 @@ for i in range(1,14):
   plt.yticks(fontsize = 18)
   plt.savefig(f"fig-sec-{i}.pdf", bbox_inches='tight')
       
-    
-            
-          
-
-
 # %%

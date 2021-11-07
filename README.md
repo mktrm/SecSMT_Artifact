@@ -107,7 +107,14 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 * Run `python3 scripts/browserlike/graph.py` to parse the results and draw the performance figure.
 * Open the pdf file that is stored in the current directory (`browserlike.pdf`) and compare the results with figure 8 of the paper.
 
+### 7. Run Security Experiments
+* Use `python3 scripts/security/run_security_eval.py slurm` to submit security experiemnts to the Slurm scheduler.
+  - Alternativly, you can run this locally using `python3 scripts/security/run_security_eval.py`
+  - This should take about ten minutes if enough parallelism is available.
 
+### 8. Validate Results
+* Run `python3 scripts/security/draw_sec_figs.py` to parse the results and draw the performance figure.
+* Open the pdf file that is stored in the current directory (`fig-sec-1.pdf`) and compare the results with figure 6 of the paper.
 
 ### Citation
 Please cite the following paper if you use this artifact:
