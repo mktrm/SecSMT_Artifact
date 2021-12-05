@@ -84,35 +84,84 @@ Note that the fluctuation in bandwidth and error rate numbers can be caused by v
 ### 3. Build the simulator
 * Run `scripts/build_gem5.sh` to build the simulator.
 
-### 4. Run Spec Experiments
+### 4. Generate SPEC Simpoints
+* If you already have access to simpoint checkpoints, please skip this step.
+* Download the pinplay tool from https://www.intel.com/content/www/us/en/developer/articles/tool/program-recordreplay-toolkit.html. The version that we used: `pinplay-drdebug-3.7-pin-3.7-97619-g0d0c92f4f-gcc-linux.tar.gz`.  
+* After downloading the pinplay tool extract and rename it to pin:
+
+```
+  gunzip pinplay-drdebug-3.7-pin-3.7-97619-g0d0c92f4f-gcc-linux.tar.gz
+  tar -xvf pinplay-drdebug-3.7-pin-3.7-97619-g0d0c92f4f-gcc-linux.tar
+  mv pinplay-drdebug-3.7-pin-3.7-97619-g0d0c92f4f-gcc-linux pin
+```
+* Setup environment for pin tool:
+```
+  export PIN_KIT=$(pwd)/pin
+  cd $PIN_KIT/extras/pinplay/examples
+  make
+```
+
+* Create a pin configuration file for each benchmark. For example, here is the content of mcf.cfg, the config file that we used for mcf benchmark:
+
+```
+[Parameters]
+program_name: mcf
+input_name: ref
+command: SPEC2017/benchspec/CPU/605.mcf_s/run/run_base_refspeed_mytest-m64.0007/mcf_s_base.mytest-m64 inp.in
+maxk: 32
+mode: st
+warmup_length: 100000
+slice_size: 100000000
+pinplayhome: [replace_with_PIN_path]   
+```
+ * Run the pinplay tool to create simpoints [it should takes several hours]:
+
+ ```
+$PIN_KIT/extras/pinplay/scripts/pinpoints.py --cfg mcf.cfg -l -b  --simpoint  --whole_pgm_dir run/mcf/whole
+```
+
+* If the previous command is successful, you should have a folder named `mcf.ref.[num].Data` that contains simpoint files: `t.simpoints` and `t.weights`. 
+
+* Now we use gem5 in fast Atomic mode to create checkpoints of the representative regions [this will take up to several weeks]
+```
+build/X86/gem5.fast configs/example/se.py --take-simpoint  --checkpoint=t.simpoints,t.weights,100000000,30000000 -c -c ./mcf_s_base.mytest-m64 -o 'inp.in' --cpu-type=AtomicSimpleCPU 
+```
+
+* After this, we will have all the checkpoints stored in the `m5out` folder. 
+* For more information on Pin, Pinplay, and Simpoint tools, see [Intel Pinpoints](https://www.intel.com/content/www/us/en/developer/articles/tool/pin-a-binary-instrumentation-tool-pinpoints.html), [PinPoint HPCA Tutorial](http://snipersim.org/documents/2013-02-23%20PinPoints%20Sniper%20HPCA%20Tutorial.pdf), and [Simpoint](https://cseweb.ucsd.edu/~calder/simpoint/).
+
+### 5. Run Spec Experiments
 
 * Create the SPEC folder `workloads/spec2017` with all the available simpoints, alternatively, make sure the script `scripts/spec17/config.py` has a correct pointer to the spec17 root folder. 
   - [ArtifactEvaluators] You can run ` ln -s  /p/csd/mtaram/spec2017-2/ workloads/spec2017` on our servers to link the folder containing spec2017 simpoints into the correct path.
-*  If you already have access to SPEC joint checkpoints skip this step. Use `python scripts/merge_ckp.py` to create joint multithreaded SMT checkpoints from single-threaded Spec Simpoints. 
+*  If you already have access to SPEC joint checkpoints skip this step. Use `python scripts/spec17/merge_ckp.py` to create joint multithreaded SMT checkpoints from single-threaded Spec Simpoints. 
     - [ArtifactEvaluators] You should skip this step.
-* Use `python3 scripts/spec17/run_gem5.py` to submit all of the simulation jobs to the Slurm scheduler. 
-    - It should take around 30 min to submit all of the jobs and they should take around 2 to 3 hours to complete if enough computing nodes are available. You can see the status of the jobs using `squeue`. 
+    - Users should manually set up `scripts/spec17/config.py` and set `heaviest_ckp` to the simpoint number with maximum weight from `t.weights` from previous step.
+    - The script, then will go through all pairs of the benchmarks specified in `scripts/spec17/config.py` and generates the joint checkpoints.
+
+* Use `python3 scripts/spec17/run_gem5.py` to submit all the simulation jobs to the Slurm scheduler. 
+    - It should take around 30 min to submit all the jobs, and they should take around 2 to 3 hours to complete if enough computing nodes are available. You can see the status of the jobs using `squeue`. 
 
 
-### 4. Validate Results
+### 6. Validate Results
 * Run `python3 scripts/spec17/draw_figs.py` to parse the results and draw the performance figure.
 * Open the pdf file that is stored in the current directory (`fig-mitigation-all.pdf`) and compare the results with figure 7 of the paper.
 
-### 5. Run Javascript Experiments
-* Use `./scripts/browserlike/runall.sh slurm` to submit javascript experiemnts to the Slurm scheduler.
-  - Alternativly, you can run this locally using `./scripts/browserlike/runall.sh`
+### 7. Run Javascript Experiments
+* Use `./scripts/browserlike/runall.sh slurm` to submit Javascript experiments to the Slurm scheduler.
+  - Alternatively, you can run this locally using `./scripts/browserlike/runall.sh`
   - This should take about an hour if enough parallelism is available.
 
-### 6. Validate Results
+### 8. Validate Results
 * Run `python3 scripts/browserlike/graph.py` to parse the results and draw the performance figure.
 * Open the pdf file that is stored in the current directory (`browserlike.pdf`) and compare the results with figure 8 of the paper.
 
-### 7. Run Security Experiments
-* Use `python3 scripts/security/run_security_eval.py slurm` to submit security experiemnts to the Slurm scheduler.
-  - Alternativly, you can run this locally using `python3 scripts/security/run_security_eval.py`
+### 9. Run Security Experiments
+* Use `python3 scripts/security/run_security_eval.py slurm` to submit security experiments to the Slurm scheduler.
+  - Alternatively, you can run this locally using `python3 scripts/security/run_security_eval.py`
   - This should take about ten minutes if enough parallelism is available.
 
-### 8. Validate Results
+### 10. Validate Results
 * Run `python3 scripts/security/draw_sec_figs.py` to parse the results and draw the performance figure.
 * Open the pdf file that is stored in the current directory (`fig-sec-1.pdf`) and compare the results with figure 6 of the paper.
 
